@@ -201,7 +201,6 @@ $objForm.Controls.Add($wemVersion)
 $res = Invoke-WebRequest -Uri "https://learn.microsoft.com/en-us/fslogix/overview-release-notes" -UseBasicParsing
 $fslogixReg = "fslogix.*?>(.*)<\/h2>"
 $allMatches = ($res | Select-String $fslogixReg -AllMatches).Matches
-$allMatches[0].Groups[1].Value
 
 $fslogixText= New-Object System.Windows.Forms.TextBox
 $fslogixText.Location = New-Object System.Drawing.Size(0, 240)
