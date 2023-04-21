@@ -198,14 +198,14 @@ $wemVersion.Text = $citrixWemResult[0].pubDate
 $objForm.Controls.Add($wemVersion)
 
 #FSLogix
-$res = Invoke-WebRequest -Uri "https://learn.microsoft.com/en-us/fslogix/overview-release-notes" -UseBasicParsing
+$fsLogixRes = Invoke-WebRequest -Uri "https://learn.microsoft.com/en-us/fslogix/overview-release-notes" -UseBasicParsing
 $fslogixReg = "fslogix.*?>(.*)<\/h2>"
-$allMatches = ($res | Select-String $fslogixReg -AllMatches).Matches
+$fslogixMatches = ($fsLogixRes.Content | Select-String $fslogixReg -AllMatches).Matches
 
 $fslogixText= New-Object System.Windows.Forms.TextBox
 $fslogixText.Location = New-Object System.Drawing.Size(0, 240)
 $fslogixText.Size = New-Object System.Drawing.Size(300, 20)
-$fslogixText.Text = $allMatches[0].Groups[1].Value
+$fslogixText.Text = $fslogixMatches[0].Groups[1].Value
 $objForm.Controls.Add($fslogixText)
  
 $fslogixVersion = New-Object System.Windows.Forms.Label
@@ -213,5 +213,29 @@ $fslogixVersion.Location = New-Object System.Drawing.Size(400, 240)
 $fslogixVersion.Size = New-Object System.Drawing.Size(300, 20)
 $fslogixVersion.Text = "no value"
 $objForm.Controls.Add($fslogixVersion)
+
+#Microsoft Azure Active Directory Connect
+
+#FUJITSU Software ServerView Plug-In for VMware vCenter
+$serverViewRes = Invoke-WebRequest -Uri "https://support.ts.fujitsu.com/prim_supportcd/SVSSoftware/html/ServerViewIntegration_e.html" -UseBasicParsing
+$serverViewReg = "vCenter Plug-in<\/td>\r\n.*\r\n.*\r\n.*>(.*)<"
+$serverViewMatches = ($serverViewRes.Content | Select-String $serverViewReg -AllMatches).Matches
+
+$serverViewText= New-Object System.Windows.Forms.TextBox
+$serverViewText.Location = New-Object System.Drawing.Size(0, 280)
+$serverViewText.Size = New-Object System.Drawing.Size(300, 20)
+$serverViewText.Text = "FUJITSU ServerView Plug-In " + $serverViewMatches[0].Groups[1].Value
+$objForm.Controls.Add($serverViewText)
+ 
+$serverViewVersion = New-Object System.Windows.Forms.Label
+$serverViewVersion.Location = New-Object System.Drawing.Size(400, 280)
+$serverViewVersion.Size = New-Object System.Drawing.Size(300, 20)
+$serverViewVersion.Text = "no value"
+$objForm.Controls.Add($serverViewVersion)
+
+#Fujitsu Eternsu
+
+#Trend Micro Deep Security
+# https://files.trendmicro.com/products/deepsecurity/en/DeepSecurityInventory_en.xml
 
 $objForm.ShowDialog()
