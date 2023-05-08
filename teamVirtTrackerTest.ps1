@@ -331,73 +331,85 @@ class FslogixData {
 	}
 }
 
-class PrimergyVcenterData {
-	[object] newPrimergyVcenterPlugin() {
-		$primergyVcenterData = @{}
-		$global:edge.Navigate().GotoURL("https://support.ts.fujitsu.com/index.asp?lng=de")
-		$actions = [OpenQA.Selenium.Interactions.Actions]::new($global:edge)
-		$searchButton = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('.search > a:nth-child(1)'))
-		$searchButton.Click()
-		Start-Sleep -Seconds 1.5 
-		$searchField = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('#Search'))
-		$actions.SendKeys($searchField, "FUJITSU SOFTWARE SERVERVIEW PLUG-IN FOR VMWARE VCENTER")
-		$actions.Perform()
-		Start-Sleep -Seconds 0.5 
-		$actions.SendKeys($searchField, [OpenQA.Selenium.Keys]::Enter)
-		$actions.Perform()
-		Start-Sleep -Seconds 0.5
-		$apps = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('#tabapp'))
-		$apps.Click()
-		Start-Sleep -Seconds 2
-		$versionEntry = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('#divclass1 > table > tbody > tr:nth-child(2) > td > div'))
-		$release = $versionEntry.FindElement([OpenQA.Selenium.By]::CssSelector('fieldset div#row2 label')).Text
-		$primergyVcenterData["name"] = $versionEntry.FindElement([OpenQA.Selenium.By]::CssSelector('fieldset div#row1 label span')).Text
-		$primergyVcenterData["version"] = ($release | Select-String -Pattern '(.*)\s').Matches.Groups[1].Value
-		$primergyVcenterData["date"] = ($release | Select-String -Pattern '\((.*)\)').Matches.Groups[1].Value
-		$primergyVcenterData["link"] = ''
-		$primergyVcenterData["source"] = ''
-		return $primergyVcenterData
-	}
+function newPrimergyVcenterPlugin() {
+	$primergyVcenterData = @{}
+	$global:edge.Navigate().GotoURL("https://support.ts.fujitsu.com/index.asp?lng=de")
+	$actions = [OpenQA.Selenium.Interactions.Actions]::new($global:edge)
+	$searchButton = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('.search > a:nth-child(1)'))
+	$searchButton.Click()
+	Start-Sleep -Seconds 1.5 
+	$searchField = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('#Search'))
+	$actions.SendKeys($searchField, "FUJITSU SOFTWARE SERVERVIEW PLUG-IN FOR VMWARE VCENTER")
+	$actions.Perform()
+	Start-Sleep -Seconds 0.5 
+	$actions.SendKeys($searchField, [OpenQA.Selenium.Keys]::Enter)
+	$actions.Perform()
+	Start-Sleep -Seconds 0.5
+	$apps = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('#tabapp'))
+	$apps.Click()
+	Start-Sleep -Seconds 2
+	$versionEntry = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('#divclass1 > table > tbody > tr:nth-child(2) > td > div'))
+	$release = $versionEntry.FindElement([OpenQA.Selenium.By]::CssSelector('fieldset div#row2 label')).Text
+	$primergyVcenterData["name"] = $versionEntry.FindElement([OpenQA.Selenium.By]::CssSelector('fieldset div#row1 label span')).Text
+	$primergyVcenterData["version"] = ($release | Select-String -Pattern '(.*)\s').Matches.Groups[1].Value
+	$primergyVcenterData["date"] = ($release | Select-String -Pattern '\((.*)\)').Matches.Groups[1].Value
+	$primergyVcenterData["link"] = ''
+	$primergyVcenterData["source"] = ''
+	return [PSCustomObject]$primergyVcenterData
+}
+
+function newPrimergyEternusPlugin() {
+	$primergyEternusData = @{}
+	$global:edge.Navigate().GotoURL("https://www.fujitsu.com/global/support/products/computing/storage/download/evcp-download.html")
+	Start-Sleep -Seconds 1.5 
+#	$actions = [OpenQA.Selenium.Interactions.Actions]::new($global:edge)
+	$version = $global:edge.FindElement([OpenQA.Selenium.By]::CssSelector('#main > div > div.section.section-space > div > div:nth-child(9) > table > tbody > tr:nth-child(1) > th'))
+	$primergyEternusData["name"] = $versionEntry.FindElement([OpenQA.Selenium.By]::CssSelector('fieldset div#row1 label span')).Text
+	$primergyEternusData["version"] = $version.Text
+	$primergyEternusData["date"] = ($release | Select-String -Pattern '\((.*)\)').Matches.Groups[1].Value
+	$primergyEternusData["link"] = ''
+	$primergyEternusData["source"] = ''
+	return [PSCustomObject]$primergyEternusData
 }
 
 
 $versions = @()
 
-$vmware = [VmwareData]::new()
-$versions += [PSCustomObject]$vmware.newVcenter()
-$versions += [PSCustomObject]$vmware.newEsxi()
-$versions += [PSCustomObject]$vmware.newVmtools()
+# $vmware = [VmwareData]::new()
+# $versions += [PSCustomObject]$vmware.newVcenter()
+# $versions += [PSCustomObject]$vmware.newEsxi()
+# $versions += [PSCustomObject]$vmware.newVmtools()
 
-#$PowerchuteNs = [PowerchuteNs]::new()
-#$PowerchuteNs.newPowerchuteNsVm()
-#$versions += [PSCustomObject]$PowerchuteNs.newPowerchuteNsVm()
-#$versions += [PSCustomObject]$PowerchuteNs.newPowerchuteNsWin()
+# #$PowerchuteNs = [PowerchuteNs]::new()
+# #$PowerchuteNs.newPowerchuteNsVm()
+# #$versions += [PSCustomObject]$PowerchuteNs.newPowerchuteNsVm()
+# #$versions += [PSCustomObject]$PowerchuteNs.newPowerchuteNsWin()
 
-$citrixAdc = [CitrixAdcData]::new()
-$versions += [PSCustomObject]$citrixAdc.newCitrixAdcFeature()
-$versions += [PSCustomObject]$citrixAdc.newCitrixAdcMaintenance()
+# $citrixAdc = [CitrixAdcData]::new()
+# $versions += [PSCustomObject]$citrixAdc.newCitrixAdcFeature()
+# $versions += [PSCustomObject]$citrixAdc.newCitrixAdcMaintenance()
 
-$citrixAdm = [CitrixAdmData]::new()
-$versions += [PSCustomObject]$citrixAdm.newCitrixAdmFeature()
-$versions += [PSCustomObject]$citrixAdm.newCitrixAdmMaintenance()
+# $citrixAdm = [CitrixAdmData]::new()
+# $versions += [PSCustomObject]$citrixAdm.newCitrixAdmFeature()
+# $versions += [PSCustomObject]$citrixAdm.newCitrixAdmMaintenance()
 
-$citrixDaas = [CitrixDaasData]::new()
-$versions += [PSCustomObject]$citrixDaas.newCitrixDaas()
+# $citrixDaas = [CitrixDaasData]::new()
+# $versions += [PSCustomObject]$citrixDaas.newCitrixDaas()
 
-$citrixLicenseServer = [CitrixLicenseServerData]::new()
-$versions += [PSCustomObject]$citrixLicenseServer.newCitrixLicenseServer()
+# $citrixLicenseServer = [CitrixLicenseServerData]::new()
+# $versions += [PSCustomObject]$citrixLicenseServer.newCitrixLicenseServer()
 
-$citrixWorkspace = [CitrixWorkspaceData]::new()
-$versions += [PSCustomObject]$citrixWorkspace.newCitrixWorkspace()
+# $citrixWorkspace = [CitrixWorkspaceData]::new()
+# $versions += [PSCustomObject]$citrixWorkspace.newCitrixWorkspace()
 
-$citrixWem = [CitrixWorkspaceData]::new()
-$versions += [PSCustomObject]$citrixWem.newCitrixWorkspace()
+# $citrixWem = [CitrixWorkspaceData]::new()
+# $versions += [PSCustomObject]$citrixWem.newCitrixWorkspace()
 
-$fslogix = [FslogixData]::new()
-$versions += [PSCustomObject]$fslogix.newFslogix()
+# $fslogix = [FslogixData]::new()
+# $versions += [PSCustomObject]$fslogix.newFslogix()
 
-$primergyVcenter = [PrimergyVcenterData]::new()
-$versions += [PSCustomObject]$primergyVcenter.newPrimergyVcenterPlugin()
+# $versions += newPrimergyVcenterPlugin
+$versions += newPrimergyEternusPlugin
 
 $edge.Quit()
 $versions | Format-Table name, version, date, link 
