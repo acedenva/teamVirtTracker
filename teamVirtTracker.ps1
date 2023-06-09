@@ -390,8 +390,8 @@ $versions += [PSCustomObject]$citrixLicenseServer.newCitrixLicenseServer()
 $citrixWorkspace = [CitrixWorkspaceData]::new()
 $versions += [PSCustomObject]$citrixWorkspace.newCitrixWorkspace()
 
-$citrixWem = [CitrixWorkspaceData]::new()
-$versions += [PSCustomObject]$citrixWem.newCitrixWorkspace()
+$citrixWem = [CitrixWemData]::new()
+$versions += [PSCustomObject]$citrixWem.newCitrixWem()
 
 $fslogix = [FslogixData]::new()
 $versions += [PSCustomObject]$fslogix.newFslogix()
